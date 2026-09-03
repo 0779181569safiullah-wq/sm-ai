@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SM AI</title>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background:#0f172a;
+      color:white;
+    }
+    .container{
+      max-width:700px;
+      margin:auto;
+      padding:25px 18px;
+    }
+    header{
+      text-align:center;
+      padding:35px 10px 20px;
+    }
+    h1{
+      font-size:42px;
+      margin:10px 0;
+    }
+    .subtitle{
+      color:#cbd5e1;
+      font-size:18px;
+    }
+    .chat{
+      background:#1e293b;
+      border-radius:20px;
+      padding:20px;
+      margin-top:25px;
+      box-shadow:0 10px 30px rgba(0,0,0,.3);
+    }
+    textarea{
+      width:100%;
+      min-height:130px;
+      padding:15px;
+      border:0;
+      border-radius:12px;
+      background:#334155;
+      color:white;
+      font-size:16px;
+      resize:none;
+      outline:none;
+    }
+    button{
+      width:100%;
+      margin-top:12px;
+      padding:15px;
+      border:0;
+      border-radius:12px;
+      background:#2563eb;
+      color:white;
+      font-size:18px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+    button:hover{background:#1d4ed8}
+    #answer{
+      display:none;
+      margin-top:18px;
+      padding:15px;
+      background:#334155;
+      border-radius:12px;
+      line-height:1.8;
+    }
+    footer{
+      text-align:center;
+      color:#94a3b8;
+      margin-top:30px;
+      font-size:14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <header>
+      <h1>🤖 SM AI</h1>
+      <div class="subtitle">ستاسې هوښیار AI مرستیال</div>
+    </header>
+
+    <div class="chat">
+      <textarea id="question" placeholder="خپله پوښتنه دلته ولیکئ..."></textarea>
+      <button onclick="askAI()">پوښتنه واستوئ</button>
+
+      <div id="answer"></div>
+    </div>
+
+    <footer>
+      © 2026 SM AI — ټول حقوق خوندي دي
+    </footer>
+
+  </div>
+
+  <script>
+    function askAI(){
+      const question = document.getElementById("question").value.trim();
+      const answer = document.getElementById("answer");
+
+      if(!question){
+        answer.style.display = "block";
+        answer.innerHTML = "⚠️ مهرباني وکړئ خپله پوښتنه ولیکئ.";
+        return;
+      }
+
+      answer.style.display = "block";
+      answer.innerHTML =
+        "ستاسې پوښتنه ترلاسه شوه: <b>" +
+        question +
+        "</b><br><br>" +
+        "🤖 SM AI به دلته ستاسې لپاره ځواب وړاندې کوي.";
+    }
+  </script>
+
+</body>
+</html>
