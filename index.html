@@ -100,24 +100,33 @@
   </div>
 
   <script>
-    function askAI(){
-      const question = document.getElementById("question").value.trim();
-      const answer = document.getElementById("answer");
+   async function askAI() {
+  const question = document.getElementById("question").value.trim();
+  const answer = document.getElementById("answer");
 
-      if(!question){
-        answer.style.display = "block";
-        answer.innerHTML = "⚠️ مهرباني وکړئ خپله پوښتنه ولیکئ.";
-        return;
-      }
+  if (!question) {
+    answer.style.display = "block";
+    answer.innerHTML = "خپله پوښتنه ولیکئ";
+    return;
+  }
 
-      answer.style.display = "block";
-      answer.innerHTML =
-        "ستاسې پوښتنه ترلاسه شوه: <b>" +
-        question +
-        "</b><br><br>" +
-        "🤖 SM AI به دلته ستاسې لپاره ځواب وړاندې کوي.";
-    }
-  </script>
+  answer.style.display = "block";
+  answer.innerHTML = "⏳ لږ انتظار وکړئ...";
 
-</body>
-</html>
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ question })
+    });
+
+    const data = await response.json();
+    answer.innerHTML = data.answer || "ځواب ترلاسه نه شو";
+  } catch (error) {
+    answer.innerHTML = "ستونزه رامنځته شوه";
+  }
+} 
+    
+      
