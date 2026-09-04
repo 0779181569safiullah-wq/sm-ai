@@ -29,7 +29,7 @@ export default async function handler(req, res) {
         "Authorization": `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: "gpt-5.6-luna",
+        model: "gpt-5-mini",
         input: [
           {
             role: "system",
