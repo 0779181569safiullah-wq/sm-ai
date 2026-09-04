@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>SM AI</title>
 
   <style>
@@ -15,75 +16,122 @@
       font-family: Arial, sans-serif;
       background: #0f172a;
       color: white;
+      min-height: 100vh;
     }
 
     .container {
+      width: 100%;
       max-width: 700px;
       margin: auto;
-      padding: 40px 18px;
+      padding: 40px 20px;
     }
 
-    header {
+    .header {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 35px;
     }
 
-    h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
+    .header h1 {
+      font-size: 52px;
+      margin: 0 0 10px;
+      direction: ltr;
     }
 
-    .subtitle {
-      font-size: 18px;
+    .header p {
+      font-size: 22px;
       color: #cbd5e1;
+      margin: 0;
     }
 
-    .chat {
+    .chat-box {
       background: #1e293b;
-      padding: 20px;
-      border-radius: 15px;
+      padding: 25px;
+      border-radius: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     }
 
     textarea {
       width: 100%;
-      min-height: 130px;
-      padding: 15px;
-      border-radius: 10px;
+      height: 180px;
       border: none;
-      font-size: 18px;
+      outline: none;
       resize: vertical;
-      margin-bottom: 15px;
+      border-radius: 18px;
+      padding: 20px;
+      font-size: 20px;
+      font-family: Arial, sans-serif;
+      direction: rtl;
+      background: white;
+      color: #111827;
     }
 
     button {
       width: 100%;
-      padding: 15px;
+      margin-top: 18px;
+      padding: 18px;
       border: none;
-      border-radius: 10px;
+      border-radius: 16px;
       background: #2563eb;
       color: white;
-      font-size: 18px;
+      font-size: 21px;
+      font-weight: bold;
       cursor: pointer;
     }
 
-    button:hover {
-      opacity: 0.9;
+    button:active {
+      transform: scale(0.98);
     }
 
-    #answer {
-      display: none;
-      margin-top: 20px;
-      padding: 15px;
+    button:disabled {
+      background: #64748b;
+      cursor: not-allowed;
+    }
+
+    .answer {
+      margin-top: 25px;
       background: #334155;
-      border-radius: 10px;
+      padding: 22px;
+      border-radius: 18px;
+      min-height: 100px;
+      font-size: 19px;
       line-height: 1.8;
       white-space: pre-wrap;
     }
 
-    footer {
+    .answer-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #e2e8f0;
+    }
+
+    .footer {
       text-align: center;
-      margin-top: 30px;
+      margin-top: 35px;
       color: #94a3b8;
+      font-size: 16px;
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        padding: 30px 15px;
+      }
+
+      .header h1 {
+        font-size: 44px;
+      }
+
+      .header p {
+        font-size: 19px;
+      }
+
+      textarea {
+        height: 170px;
+        font-size: 18px;
+      }
+
+      button {
+        font-size: 19px;
+      }
     }
   </style>
 </head>
@@ -92,47 +140,54 @@
 
   <div class="container">
 
-    <header>
+    <div class="header">
       <h1>SM AI</h1>
-      <div class="subtitle">ستاسې هوښیار AI مرستیال</div>
-    </header>
+      <p>ستاسې هوښیار AI مرستیال</p>
+    </div>
 
-    <div class="chat">
+    <div class="chat-box">
 
       <textarea
         id="question"
         placeholder="خپله پوښتنه دلته ولیکئ..."
       ></textarea>
 
-      <button onclick="askAI()">
+      <button id="sendBtn" onclick="sendQuestion()">
         پوښتنه واستوئ
       </button>
 
-      <div id="answer"></div>
+      <div class="answer" id="answer">
+        <div class="answer-title">ستاسې پوښتنه:</div>
+        <div id="answerText">دلته به ستاسې ځواب ښکاره شي.</div>
+      </div>
 
     </div>
 
-    <footer>
-      2026 SM AI - ټول حقوق خوندي دي
-    </footer>
+    <div class="footer">
+      SM AI © 2026 - ټول حقوق خوندي دي
+    </div>
 
   </div>
 
+
   <script>
-    async function askAI() {
+    async function sendQuestion() {
+
       const question = document.getElementById("question").value.trim();
-      const answer = document.getElementById("answer");
+      const button = document.getElementById("sendBtn");
+      const answerText = document.getElementById("answerText");
 
       if (!question) {
-        answer.style.display = "block";
-        answer.innerHTML = "مهرباني وکړئ خپله پوښتنه ولیکئ.";
+        answerText.textContent = "مهرباني وکړئ لومړی خپله پوښتنه ولیکئ.";
         return;
       }
 
-      answer.style.display = "block";
-      answer.innerHTML = "⏳ لږ انتظار وکړئ...";
+      button.disabled = true;
+      button.textContent = "ځواب چمتو کېږي...";
+      answerText.textContent = "مهرباني وکړئ لږ انتظار وکړئ...";
 
       try {
+
         const response = await fetch("/api/chat", {
           method: "POST",
           headers: {
@@ -145,12 +200,24 @@
 
         const data = await response.json();
 
-        answer.innerHTML =
-          data.answer || "ځواب ترلاسه نه شو.";
+        if (!response.ok) {
+          throw new Error(data.error || "یوه ستونزه رامنځته شوه.");
+        }
+
+        answerText.textContent = data.answer || "ځواب ترلاسه نه شو.";
 
       } catch (error) {
-        answer.innerHTML =
-          "د سرور سره د اړیکې ستونزه رامنځته شوه.";
+
+        answerText.textContent =
+          "بخښنه غواړم، د ځواب ترلاسه کولو پر مهال ستونزه رامنځته شوه.";
+
+        console.error(error);
+
+      } finally {
+
+        button.disabled = false;
+        button.textContent = "پوښتنه واستوئ";
+
       }
     }
   </script>
